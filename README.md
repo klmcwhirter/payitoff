@@ -6,13 +6,29 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+## Production build
+
+Run `npm run build` to build an optimized production build.
+
+## Docker image
+
+There is a Dockerfile available so you can quickly build an image. Simply do the following.
+
+```
+docker build -t youraccount/payitoff .
+
+docker run -p 8080:80 youraccount/payitoff
+```
+
+You will be able to access the app on port 8080 through whichever network interface you choose.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Run `ng build` or `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
 ## Running unit tests
 
