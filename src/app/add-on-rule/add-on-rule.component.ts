@@ -8,6 +8,7 @@ import { AddOnRule } from '../add-on-rule/add-on-rule.model';
 })
 export class AddOnRuleComponent {
   @Input() rule: AddOnRule;
+  @Input() adjustAmount: number;
   @Input() appEdit: any; // appEdit attribute
   @Output() addRule = new EventEmitter<AddOnRule>();
   @Output() delRule = new EventEmitter<AddOnRule>();

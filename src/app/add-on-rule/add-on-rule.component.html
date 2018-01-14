@@ -13,6 +13,6 @@
   <mat-icon>clear</mat-icon>
   <mat-error *ngIf="addOnAfter.invalid">Must be a date.</mat-error>
 </button>
-<span *ngIf="edit" matTooltip="Add rules that increase the add on amount every year by $50 starting the year after this rule.">
-  <button mat-raised-button color="primary" (click)="onAddOnIncrement()" style="font-size: small;">+$50 per year</button>
+<span *ngIf="edit" matTooltip="Add rules that increase the add on amount every year by ${{adjustAmount}} starting the year after this rule.">
+  <button mat-raised-button color="primary" (click)="onAddOnIncrement()" style="font-size: small;">+${{adjustAmount}} per year</button>
 </span>

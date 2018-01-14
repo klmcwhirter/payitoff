@@ -7,14 +7,14 @@
           <span matPrefix>$&nbsp;</span>
           <mat-error *ngIf="adjAmount.invalid">Must be a number.</mat-error>
         </mat-form-field>
-        <span>Used to adjust the add on amount when the +$50 per year button is used.</span>
+        <span>Used to adjust the add on amount when the +${{ruleAdjustAmount}} per year button is used.</span>
       </mat-toolbar-row>
       <mat-toolbar-row class="addon-row">
-        <app-add-on-rule [rule]="addOnRuleToEdit" (addRule)="onAddRule($event)"></app-add-on-rule>
+        <app-add-on-rule [rule]="addOnRuleToEdit" [adjustAmount]="ruleAdjustAmount" (addRule)="onAddRule($event)"></app-add-on-rule>
       </mat-toolbar-row>
   
       <mat-toolbar-row class="addon-row" *ngFor="let rule of addOnRules">
-        <app-add-on-rule appEdit [rule]="rule" (delRule)="onDelRule($event)" (addOnIncrement)="onAddIncrementPerYear($event)"></app-add-on-rule>
+        <app-add-on-rule appEdit [rule]="rule" [adjustAmount]="ruleAdjustAmount" (delRule)="onDelRule($event)" (addOnIncrement)="onAddIncrementPerYear($event)"></app-add-on-rule>
       </mat-toolbar-row>
     </mat-toolbar>
   </div>
