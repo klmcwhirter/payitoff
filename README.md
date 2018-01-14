@@ -6,6 +6,18 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+_Note that .angular-cli.json contains the following lines that are helpful for me. You may want to remove the ```serve``` property._
+```
+  "defaults": {
+    "serve": {
+      "host": "10.211.55.50"
+    },
+
+    "styleExt": "css",
+    "component": {}
+  }
+```
+
 ## Production build
 
 Run `npm run build` to build an optimized production build.
@@ -15,9 +27,8 @@ Run `npm run build` to build an optimized production build.
 There is a Dockerfile available so you can quickly build an image. Simply do the following.
 
 ```
-docker build -t youraccount/payitoff .
-
-docker run -p 8080:80 youraccount/payitoff
+npm run docker-build
+npm run docker-run
 ```
 
 You will be able to access the app on port 8080 through whichever network interface you choose.

@@ -6,8 +6,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod --aot --build-optimizer",
-    "test": "ng test",
     "lint": "ng lint",
+    "docker-build": "npm run build && docker build -t payitoff .",
+    "docker-run": "docker run --name payitoff -p 8080:80 payitoff && docker rm -v payitoff",
+    "test": "ng test",
     "e2e": "ng e2e"
   },
   "private": true,
