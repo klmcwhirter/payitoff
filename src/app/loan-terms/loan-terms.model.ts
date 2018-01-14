@@ -66,11 +66,17 @@ export class LoanMonth implements ILoanPeriod {
     }
 
     tryUpdateAddOnAmt(amt: number): void {
-        if (this.balance > (amt + this.payment)) {
+        if (this.prevBalance > (amt + this.payment)) {
+            // tslint:disable-next-line:max-line-length
+            // console.log(`tryUpdateAddOnAmt: prevBalance > (amt + payment): prevBalance=${this.prevBalance}, amt=${amt}, payment=${this.payment}`);
             this.addOnAmt = amt;
-        } else if (this.payment >= this.balance) {
+        } else if (this.payment >= this.prevBalance) {
+            // tslint:disable-next-line:max-line-length
+            // console.log(`tryUpdateAddOnAmt: payment >= prevBalance: prevBalance=${this.prevBalance}, amt=${amt}, payment=${this.payment}`);
             this.addOnAmt = 0.0;
         } else {
+            // tslint:disable-next-line:max-line-length
+            // console.log(`tryUpdateAddOnAmt; else: amt=${amt}, prevBalance=${this.prevBalance}, payment=${this.payment}, interestAmt=${this.interestAmt}`);
             this.addOnAmt = Math.min(amt, this.prevBalance - this.payment + this.interestAmt);
         }
     }
@@ -96,9 +102,6 @@ export class LoanYear implements ILoanPeriod {
     }
 
     update(loanMonth: LoanMonth) {
-        if (loanMonth.balance === 0.0) {
-            this.date = loanMonth.date.toDate().toFirstOfTheMonthString();
-        }
         this.interestAmt += loanMonth.interestAmt;
         this.payment += loanMonth.payment;
         this.addOnAmt += loanMonth.addOnAmt;

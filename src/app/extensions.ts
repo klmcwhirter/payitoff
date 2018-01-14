@@ -39,7 +39,7 @@ export function addExtensions() {
 
 
     Number.prototype.isValidNumber = function (): boolean {
-        const rc = !Number.isNaN(Number(this));
+        const rc = !Number.isNaN(Number(this)) && Number.isFinite(Number(this));
         return rc;
     };
 
