@@ -1,93 +1,50 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material';
 
-import { AddOnRule, LoanTerms, LoanMonth, ILoanPeriod } from './app.model';
+import { AddOnRuleService } from './add-on-rule/add-on-rule.service';
+import { ILoanPeriod } from './loan-terms/loan-terms.model';
+import { LoanTermsService } from './loan-terms/loan-terms.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: []
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  constructor(
+    private addOnRuleService: AddOnRuleService,
+    private loanTermsService: LoanTermsService
+  ) { }
+
   byYear = true;
-  loanTerms = new LoanTerms(
-    '08/01/2012',
-    360,
-    .03875,
-    258000.00
-  );
-  addOnRuleToEdit: AddOnRule = new AddOnRule(0, new Date().toShortDateString());
-  addOnRules: AddOnRule[] = [
-    new AddOnRule(260.0, new Date('1/1/2018').toShortDateString()),
-    new AddOnRule(800.0, new Date('2/1/2018').toShortDateString())
-  ];
-
-  displayedColumns = ['number', 'date', 'payment', 'addOnAmt', 'interest', 'principal', 'balance'];
-  dataSource = new MatTableDataSource<ILoanPeriod>(this.loanTerms.schedule(this.byYear, this.addOnRules));
-
-  displayAddOnRules = false;
   ruleAdjustAmount = 50.0;
 
-  addRule() {
-    if (this.isValidNumber(this.addOnRuleToEdit.amount) && this.isValidDate(this.addOnRuleToEdit.after)) {
-      this.addOnRules.push(this.addOnRuleToEdit);
-      this.addOnRuleToEdit = new AddOnRule(0, new Date().toShortDateString());
-      this.updateSchedule();
-    }
-  }
+  dataSource = new MatTableDataSource<ILoanPeriod>();
 
-  add50PerYear(rule: AddOnRule) {
-    const mays = this.findAllMayAfter(rule.after.toDate());
-    let amt = rule.amount;
-    mays.forEach(may => {
-      amt += this.ruleAdjustAmount;
-      this.addOnRules.push(new AddOnRule(amt, may.toShortDateString()));
-    });
-    this.updateSchedule();
-  }
+  displayAddOnRules = false;
 
-  delRule(rule: AddOnRule) {
-    this.addOnRules = this.addOnRules.filter(r => r.after !== rule.after);
-    this.updateSchedule();
-  }
-
-  findAllMayAfter(date: Date): Date[] {
-    const rc = this.loanTerms.schedule(false, this.addOnRules)
-      .filter(lp => lp.date.toDate().isShortDateGreater(date) && lp.date.toDate().getMonth() === 4)
-      .map(lp => lp.date.toDate());
-    return rc;
-  }
-
-  isValidDate(date: string): boolean {
-    let rc = false;
-    try {
-      const dt = date.toDate();
-      rc = (Object.prototype.toString.call(dt) === '[object Date]') && !isNaN(dt.getTime());
-    } catch (e) {
-    }
-    return rc;
-  }
-
-  isValidNumber(val: number): boolean {
-    const rc = !Number.isNaN(Number(val));
-    return rc;
+  ngOnInit() {
+    this.loanTermsService.updateTerms('08/01/2012', 360, .03875, 258000.00);
+    this.addOnRuleService.addRule(this.addOnRuleService.getNewRule(260.0, '01/01/2018'));
+    this.addOnRuleService.addRule(this.addOnRuleService.getNewRule(800.0, '02/01/2018'));
+    this.onModelChanged();
   }
 
   isValidEntry(): boolean {
-    const rc = this.isValidDate(this.loanTerms.start)
-      && this.isValidNumber(this.loanTerms.months)
-      && this.isValidNumber(this.loanTerms.rate)
-      && this.isValidNumber(this.loanTerms.principal);
+    const loanTerms = this.loanTermsService.loanTerms;
+    const rc = loanTerms.start.isValidDate()
+      && loanTerms.months.isValidNumber()
+      && loanTerms.rate.isValidNumber()
+      && loanTerms.principal.isValidNumber();
 
     return rc;
   }
 
-  updateSchedule() {
+  onModelChanged() {
     if (this.isValidEntry()) {
-      this.dataSource.data = this.loanTerms.schedule(this.byYear, this.addOnRules);
+      this.dataSource.data = this.loanTermsService.amortize(this.byYear);
     }
   }
-
-  get diagnostic(): string { return JSON.stringify(this.loanTerms); }
 }

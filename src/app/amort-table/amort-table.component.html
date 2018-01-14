@@ -1,0 +1,51 @@
+
+<div class="mat-elevation-z8">
+    <mat-table #table [dataSource]="dataSource">
+  
+      <!-- Month Column -->
+      <ng-container matColumnDef="number">
+        <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.number}} </mat-cell>
+      </ng-container>
+  
+      <!-- Month Date Column -->
+      <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.date}} </mat-cell>
+      </ng-container>
+  
+      <!-- Payment Column -->
+      <ng-container matColumnDef="payment">
+        <mat-header-cell *matHeaderCellDef> Payment </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.payment | currency:'USD':true:'1.2-2'}} </mat-cell>
+      </ng-container>
+  
+      <!-- Add On Column -->
+      <ng-container matColumnDef="addOnAmt">
+        <mat-header-cell *matHeaderCellDef> Add On </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.addOnAmt | currency:'USD':true:'1.2-2'}} </mat-cell>
+      </ng-container>
+  
+      <!-- Interest Column -->
+      <ng-container matColumnDef="interest">
+        <mat-header-cell *matHeaderCellDef> Interest </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.interestAmt | currency:'USD':true:'1.2-2'}} </mat-cell>
+      </ng-container>
+  
+      <!-- Principal Column -->
+      <ng-container matColumnDef="principal">
+        <mat-header-cell *matHeaderCellDef> Principal </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.principalAmt | currency:'USD':true:'1.2-2'}} </mat-cell>
+      </ng-container>
+  
+      <!-- Balance Column -->
+      <ng-container matColumnDef="balance">
+        <mat-header-cell *matHeaderCellDef> Balance </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.balance | currency:'USD':true:'1.2-2'}} </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
+  

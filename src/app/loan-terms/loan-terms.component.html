@@ -1,0 +1,40 @@
+<form>
+  <span>
+    <mat-form-field>
+      <input matInput type="date-local" placeholder="Start" name="start" [(ngModel)]="loanTerms.start" #start="ngModel" (keyup)="onModelChange()">
+      <mat-error *ngIf="start.invalid">Must be a date.</mat-error>
+    </mat-form-field>
+  </span>
+  <span>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Months" name="months" [(ngModel)]="loanTerms.months" #months="ngModel" (keyup)="onModelChange()">
+      <mat-error *ngIf="months.invalid">Must be a number.</mat-error>
+    </mat-form-field>
+  </span>
+  <span>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Rate" name="rate" [(ngModel)]="loanTerms.rate" #rate="ngModel" (keyup)="onModelChange()">
+      <span matSuffix>&nbsp;%</span>
+      <mat-error *ngIf="rate.invalid">Must be a number.</mat-error>
+    </mat-form-field>
+  </span>
+  <span>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Principal" name="principal" [(ngModel)]="loanTerms.principal" #principal="ngModel"
+        (keyup)="onModelChange()">
+      <span matPrefix>$&nbsp;</span>
+      <mat-error *ngIf="principal.invalid">Must be a number.</mat-error>
+    </mat-form-field>
+  </span>
+  <span>
+    <mat-form-field>
+      <input matInput disabled placeholder="Payment" name="payment" [ngModel]="loanTerms.payment">
+      <span matPrefix>$&nbsp;</span>
+    </mat-form-field>
+  </span>
+  <span>
+    <mat-form-field>
+      <input matInput disabled placeholder="Due" name="due" [ngModel]="loanTerms.due">
+    </mat-form-field>
+  </span>
+</form>

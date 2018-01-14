@@ -37,10 +37,26 @@ export function addExtensions() {
         return `${(this.getMonth() + 1).padZeroes(2)}/${this.getDate().padZeroes(2)}/${this.getFullYear()}`;
     };
 
+
+    Number.prototype.isValidNumber = function (): boolean {
+        const rc = !Number.isNaN(Number(this));
+        return rc;
+    };
+
     Number.prototype.padZeroes = function (width: number, padChar?: string): string {
         padChar = typeof padChar !== 'undefined' ? padChar : '0';
         const pad = new Array(1 + width).join(padChar);
         return (pad + this).slice(-pad.length);
+    };
+
+    String.prototype.isValidDate = function (): boolean {
+        let rc = false;
+        try {
+            const dt = this.toDate();
+            rc = (Object.prototype.toString.call(dt) === '[object Date]') && !isNaN(dt.getTime());
+        } catch (e) {
+        }
+        return rc;
     };
 
     String.prototype.toDate = function (): Date {

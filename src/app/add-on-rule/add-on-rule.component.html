@@ -1,0 +1,18 @@
+<mat-form-field>
+  <input matInput type="number" placeholder="Amount" name="addOnAmount" [(ngModel)]="rule.amount" #addOnAmount="ngModel">
+  <span matPrefix>$&nbsp;</span>
+  <mat-error *ngIf="addOnAmount.invalid">Must be a number.</mat-error>
+</mat-form-field>
+<mat-form-field>
+  <input matInput type="date-local" placeholder="After" name="addOnAfter" [(ngModel)]="rule.after" #addOnAfter="ngModel">
+</mat-form-field>
+<button mat-mini-fab color="primary" *ngIf="!edit" (click)="onAddRule()" style="font-size: small;">
+  <mat-icon>add</mat-icon>
+</button>
+<button mat-mini-fab color="warn" *ngIf="edit" (click)="onDelRule()" style="font-size: small;">
+  <mat-icon>clear</mat-icon>
+  <mat-error *ngIf="addOnAfter.invalid">Must be a date.</mat-error>
+</button>
+<span *ngIf="edit" matTooltip="Add rules that increase the add on amount every year by $50 starting the year after this rule.">
+  <button mat-raised-button color="primary" (click)="onAddOnIncrement()" style="font-size: small;">+$50 per year</button>
+</span>

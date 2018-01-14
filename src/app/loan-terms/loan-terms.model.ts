@@ -1,21 +1,4 @@
 
-export class AddOnRule {
-    constructor(
-        public amount: number,
-        public after: string
-    ) { }
-
-    static findAddOnAmt(addOnRules: AddOnRule[], after: Date): number {
-        if (addOnRules) {
-            addOnRules = addOnRules.sort((r1, r2) => r2.after.toDate().compareShortDate(r1.after.toDate()));
-            // console.log(addOnRules);
-            const rule = addOnRules.find((r: AddOnRule) => after.isShortDateGreaterEqual(r.after.toDate()));
-            return rule ? rule.amount : 0.0;
-        }
-        return 0.0;
-    }
-}
-
 export interface ILoanPeriod {
     number: number;
     date: string;
@@ -63,7 +46,7 @@ export class LoanMonth implements ILoanPeriod {
     isFirstLastOrJanuary(): boolean {
         // Is this the first month?
         const firstDt = this.date.toDate();
-        // This first item in the array of LoanMonths will be for one month after start
+        // The first item in the array of LoanMonths will be for one month after start
         firstDt.setMonth(firstDt.getMonth() - 1);
 
         let rc = firstDt.isShortDateEqual(this.loanTerms.start.toDate());
@@ -128,10 +111,10 @@ export class LoanYear implements ILoanPeriod {
 export class LoanTerms {
 
     constructor(
-        public start: string,
-        public months: number,
-        public rate: number,
-        public principal: number
+        public start: string = new Date().toShortDateString(),
+        public months: number = 360,
+        public rate: number = .05,
+        public principal: number = 200000
     ) { }
 
     get payment(): number {
@@ -140,7 +123,8 @@ export class LoanTerms {
         const M = this.months;
         const L = this.principal;
 
-        const pmt = (R / (Math.pow(1 + R, M) - 1)) * Math.pow(1 + R, M) * L;
+        const rPlus1ToM = Math.pow(1 + R, M);
+        const pmt = (R / (rPlus1ToM - 1)) * rPlus1ToM * L;
 
         // Round to 2 decimal places
         return Math.ceil(pmt * 100) / 100;
@@ -150,33 +134,5 @@ export class LoanTerms {
         const due = this.start.toDate();
         due.setMonth(due.getMonth() + this.months);
         return due.toShortDateString();
-    }
-
-    schedule(byYear: boolean, addOnRules?: AddOnRule[]): ILoanPeriod[] {
-        const rc = [];
-        let month = 1;
-        let year = 1;
-
-        let loanYear: LoanYear;
-        let balance = this.principal;
-        while (balance > 0.0) {
-            const loanMonth = new LoanMonth(month++, this, balance, 0);
-            const amt = AddOnRule.findAddOnAmt(addOnRules, loanMonth.date.toDate());
-            loanMonth.tryUpdateAddOnAmt(amt);
-
-            if (byYear) {
-                if (loanMonth.isFirstLastOrJanuary()) {
-                    loanYear = new LoanYear(year++, loanMonth);
-                    rc.push(loanYear);
-                } else {
-                    loanYear.update(loanMonth);
-                }
-            } else {
-                rc.push(loanMonth);
-            }
-            balance = loanMonth.balance;
-        }
-
-        return rc;
     }
 }

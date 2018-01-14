@@ -5,7 +5,7 @@
   </mat-chip-list>
   <span class="fill-remaining-space"></span>
   <span matTooltip="Display rows rolled up by year, or (unchecked) by month.">
-    <input type="checkbox" id="byYear" name="byYear" [(ngModel)]="byYear" (change)="updateSchedule()" style="font-size: small;">
+    <input type="checkbox" id="byYear" name="byYear" [(ngModel)]="byYear" (change)="onModelChanged()" style="font-size: small;">
     <label for="byYear" style="font-size: small;">By Year?</label>
   </span>
   <span matTooltip="Add on rules let you specify an extra amount to pay against the principal every month from the date in the rule forward.">
@@ -13,137 +13,9 @@
   </span>
 </mat-toolbar>
 <mat-toolbar style="font-size: smaller">
-  <form>
-    <span>
-      <mat-form-field>
-        <input matInput type="date-local" placeholder="Start" name="start" [(ngModel)]="loanTerms.start" #start="ngModel" (keyup)="updateSchedule()">
-        <mat-error *ngIf="start.invalid">Must be a date.</mat-error>
-      </mat-form-field>
-    </span>
-    <span>
-      <mat-form-field>
-        <input matInput type="number" placeholder="Months" name="months" [(ngModel)]="loanTerms.months" #months="ngModel" (keyup)="updateSchedule()">
-        <mat-error *ngIf="months.invalid">Must be a number.</mat-error>
-      </mat-form-field>
-    </span>
-    <span>
-      <mat-form-field>
-        <input matInput type="number" placeholder="Rate" name="rate" [(ngModel)]="loanTerms.rate" #rate="ngModel" (keyup)="updateSchedule()">
-        <span matSuffix>&nbsp;%</span>
-        <mat-error *ngIf="rate.invalid">Must be a number.</mat-error>
-      </mat-form-field>
-    </span>
-    <span>
-      <mat-form-field>
-        <input matInput type="number" placeholder="Principal" name="principal" [(ngModel)]="loanTerms.principal" #principal="ngModel"
-          (keyup)="updateSchedule()">
-        <span matPrefix>$&nbsp;</span>
-        <mat-error *ngIf="principal.invalid">Must be a number.</mat-error>
-      </mat-form-field>
-    </span>
-    <span>
-      <mat-form-field>
-        <input matInput disabled placeholder="Payment" name="payment" [ngModel]="loanTerms.payment">
-        <span matPrefix>$&nbsp;</span>
-      </mat-form-field>
-    </span>
-    <span>
-      <mat-form-field>
-        <input matInput disabled placeholder="Due" name="due" [ngModel]="loanTerms.due">
-      </mat-form-field>
-    </span>
-  </form>
+  <app-loan-terms (modelChanged)="onModelChanged()"></app-loan-terms>
 </mat-toolbar>
-<div class="mat-toolbar" *ngIf="displayAddOnRules">
-  <span>Add On Rules</span>
-  <mat-toolbar>
-    <mat-toolbar-row class="addon-row">
-      <mat-form-field>
-        <input matInput type="number" placeholder="Rule Adjust Amount" name="adjAmount" [(ngModel)]="ruleAdjustAmount" #adjAmount="ngModel">
-        <span matPrefix>$&nbsp;</span>
-        <mat-error *ngIf="adjAmount.invalid">Must be a number.</mat-error>
-      </mat-form-field>
-      <span>Used to adjust the add on amount when the +$50 per year button is used.</span>
-    </mat-toolbar-row>
-    <mat-toolbar-row class="addon-row">
-      <mat-form-field>
-        <input matInput type="number" placeholder="Amount" name="addOnAmount" [(ngModel)]="addOnRuleToEdit.amount" #addOnAmount="ngModel">
-        <span matPrefix>$&nbsp;</span>
-        <mat-error *ngIf="addOnAmount.invalid">Must be a number.</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="date-local" placeholder="After" name="addOnAfter" [(ngModel)]="addOnRuleToEdit.after" #addOnAfter="ngModel">
-        <mat-error *ngIf="addOnAfter.invalid">Must be a date.</mat-error>
-      </mat-form-field>
-      <button mat-mini-fab color="primary" (click)="addRule()" style="font-size: small;">
-        <mat-icon>add</mat-icon>
-      </button>
-    </mat-toolbar-row>
 
-    <mat-toolbar-row class="addon-row" *ngFor="let addOnRule of addOnRules">
-      <mat-form-field>
-        <input matInput type="number" [(ngModel)]="addOnRule.amount">
-        <span matPrefix>$&nbsp;</span>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="date-local" [(ngModel)]="addOnRule.after">
-      </mat-form-field>
-      <button mat-mini-fab color="warn" (click)="delRule(addOnRule)" style="font-size: small;">
-        <mat-icon>clear</mat-icon>
-      </button>
-      <span matTooltip="Add rules that increase the add on amount every year by $50 starting the year after this rule.">
-        <button mat-raised-button color="primary" (click)="add50PerYear(addOnRule)" style="font-size: small;">+$50 per year</button>
-      </span>
-    </mat-toolbar-row>
-  </mat-toolbar>
-</div>
+<app-add-on-rules [(ngModel)]="ruleAdjustAmount" *ngIf="displayAddOnRules" (rulesChanged)="onModelChanged()"></app-add-on-rules>
 
-<div class="mat-elevation-z8">
-  <mat-table #table [dataSource]="dataSource">
-
-    <!-- Month Column -->
-    <ng-container matColumnDef="number">
-      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
-      <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.number}} </mat-cell>
-    </ng-container>
-
-    <!-- Month Date Column -->
-    <ng-container matColumnDef="date">
-      <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
-      <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.date}} </mat-cell>
-    </ng-container>
-
-    <!-- Payment Column -->
-    <ng-container matColumnDef="payment">
-      <mat-header-cell *matHeaderCellDef> Payment </mat-header-cell>
-      <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.payment | currency:'USD':true:'1.2-2'}} </mat-cell>
-    </ng-container>
-
-    <!-- Add On Column -->
-    <ng-container matColumnDef="addOnAmt">
-      <mat-header-cell *matHeaderCellDef> Add On </mat-header-cell>
-      <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.addOnAmt | currency:'USD':true:'1.2-2'}} </mat-cell>
-    </ng-container>
-
-    <!-- Interest Column -->
-    <ng-container matColumnDef="interest">
-      <mat-header-cell *matHeaderCellDef> Interest </mat-header-cell>
-      <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.interestAmt | currency:'USD':true:'1.2-2'}} </mat-cell>
-    </ng-container>
-
-    <!-- Principal Column -->
-    <ng-container matColumnDef="principal">
-      <mat-header-cell *matHeaderCellDef> Principal </mat-header-cell>
-      <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.principalAmt | currency:'USD':true:'1.2-2'}} </mat-cell>
-    </ng-container>
-
-    <!-- Balance Column -->
-    <ng-container matColumnDef="balance">
-      <mat-header-cell *matHeaderCellDef> Balance </mat-header-cell>
-      <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.balance | currency:'USD':true:'1.2-2'}} </mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
-</div>
+<app-amort-table [dataSource]="dataSource"></app-amort-table>

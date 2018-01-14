@@ -6,25 +6,6 @@
   padding-right: 5px;
 }
 
-input[type='number'] {
-  -moz-appearance: textfield;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
-
-.mat-header-cell,
-.mat-cell {
-  font-size: small;
-}
-
 input[type=checkbox] {
   transform: scale(.75);
-}
-
-.addon-row {
-  transform-origin: left;
-  transform: scale(.65);
 }

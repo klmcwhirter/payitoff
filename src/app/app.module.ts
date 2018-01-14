@@ -14,11 +14,22 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { AddOnRuleService } from './add-on-rule/add-on-rule.service';
+import { LoanTermsService } from './loan-terms/loan-terms.service';
+
 import { AppComponent } from './app.component';
+import { AddOnRuleComponent } from './add-on-rule/add-on-rule.component';
+import { AddOnRulesComponent } from './add-on-rules/add-on-rules.component';
+import { AmortTableComponent } from './amort-table/amort-table.component';
+import { LoanTermsComponent } from './loan-terms/loan-terms.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AddOnRuleComponent,
+    AddOnRulesComponent,
+    AmortTableComponent,
+    LoanTermsComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +45,7 @@ import { AppComponent } from './app.component';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [],
+  providers: [AddOnRuleService, LoanTermsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

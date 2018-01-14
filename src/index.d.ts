@@ -9,9 +9,11 @@ interface Date {
 }
 
 interface Number {
+    isValidNumber(): boolean;
     padZeroes(width: number, padChar?: string): string;
 }
 
 interface String {
+    isValidDate(): boolean;
     toDate(): Date;
 }
