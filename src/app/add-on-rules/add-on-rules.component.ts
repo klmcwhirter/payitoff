@@ -79,7 +79,16 @@ export class AddOnRulesComponent implements ControlValueAccessor, OnInit {
     let amt = rule.amount;
     mays.forEach(may => {
       amt += this.ruleAdjustAmount;
-      this.addOnRuleService.addRule(this.addOnRuleService.getNewRule(amt, may.toShortDateString()));
+
+      const mayRule = this.addOnRuleService.findRule(may);
+      if (mayRule && amt < mayRule.amount) {
+        amt = mayRule.amount;
+      }
+
+      if (!mayRule) {
+        const newRule = this.addOnRuleService.getNewRule(amt, may.toShortDateString());
+        this.addOnRuleService.addRule(newRule);
+      }
     });
     this.rulesChanged.emit(true);
   }

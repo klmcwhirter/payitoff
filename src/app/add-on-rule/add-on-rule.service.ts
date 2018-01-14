@@ -30,4 +30,8 @@ export class AddOnRuleService {
     return rule ? rule.amount : 0.0;
   }
 
+  findRule(after: Date): AddOnRule {
+    const rule = this.addOnRules.find((r: AddOnRule) => after.isShortDateEqual(r.after.toDate()));
+    return rule;
+  }
 }
