@@ -76,20 +76,7 @@ export class AddOnRulesComponent implements ControlValueAccessor, OnInit {
 
   onAddIncrementPerYear(rule: AddOnRule) {
     const mays = this.findAllMayAfter(rule.after.toDate());
-    let amt = rule.amount;
-    mays.forEach(may => {
-      amt += this.ruleAdjustAmount;
-
-      const mayRule = this.addOnRuleService.findRule(may);
-      if (mayRule && amt < mayRule.amount) {
-        amt = mayRule.amount;
-      }
-
-      if (!mayRule) {
-        const newRule = this.addOnRuleService.getNewRule(amt, may.toShortDateString());
-        this.addOnRuleService.addRule(newRule);
-      }
-    });
+    this.addOnRuleService.addIncrementAmtPerDate(rule, this.ruleAdjustAmount, mays);
     this.rulesChanged.emit(true);
   }
 

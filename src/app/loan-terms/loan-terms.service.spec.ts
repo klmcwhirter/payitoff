@@ -8,7 +8,7 @@ import { AddOnRuleService } from '../add-on-rule/add-on-rule.service';
 import { LoanTermsService } from './loan-terms.service';
 import { AddOnRule } from '../add-on-rule/add-on-rule.model';
 
-let addOnSvc: AddOnRuleService;
+let addOnSvc: AddOnRuleService = null;
 
 describe('LoanTermsService', () => {
   beforeEach(() => {
@@ -82,15 +82,15 @@ describe('LoanTermsService', () => {
     inject([LoanTermsService], (service: LoanTermsService) => {
 
       service.loanTerms = new LoanTerms('01/01/2001', 3, .05, 1000);
-      expect(addOnSvc).toBeTruthy();
 
+      expect(addOnSvc).not.toBeNull();
       expect(addOnSvc.addOnRules.length).toEqual(0);
       addOnSvc.addOnRules = [new AddOnRule(5, '03/01/2001')];
       expect(addOnSvc.addOnRules.length).toEqual(1);
 
       const periods = service.amortize(false);
 
-      expect(periods).toBeTruthy();
+      expect(periods).not.toBeNull();
 
       expect(periods.length).toEqual(3);
 
@@ -121,7 +121,7 @@ describe('LoanTermsService', () => {
 
     const periods = service.amortize(true);
 
-    expect(periods).toBeTruthy();
+    expect(periods).not.toBeNull();
 
     expect(periods.length).toEqual(3);
 
@@ -157,15 +157,15 @@ describe('LoanTermsService', () => {
     inject([LoanTermsService], (service: LoanTermsService) => {
 
       service.loanTerms = new LoanTerms('01/01/2001', 48, .05, 58000);
-      expect(addOnSvc).toBeTruthy();
 
+      expect(addOnSvc).not.toBeNull();
       expect(addOnSvc.addOnRules.length).toEqual(0);
       addOnSvc.addOnRules = [new AddOnRule(1000, '03/01/2001')];
       expect(addOnSvc.addOnRules.length).toEqual(1);
 
       const periods = service.amortize(true);
 
-      expect(periods).toBeTruthy();
+      expect(periods).not.toBeNull();
 
       expect(periods.length).toEqual(4);
 
