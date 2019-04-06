@@ -2,6 +2,7 @@
 export interface ILoanPeriod {
     number: number;
     date: string;
+    totalPmt: number;
     interestAmt: number;
     payment: number;
     addOnAmt: number;
@@ -21,6 +22,10 @@ export class LoanMonth implements ILoanPeriod {
         const dt = this.loanTerms.start.toDate();
         dt.setMonth(dt.getMonth() + this.number);
         return dt.toShortDateString();
+    }
+
+    get totalPmt(): number {
+        return this.payment + this.addOnAmt;
     }
 
     get interestAmt(): number {
@@ -85,6 +90,7 @@ export class LoanMonth implements ILoanPeriod {
 export class LoanYear implements ILoanPeriod {
     public number: number;
     public date: string;
+    public totalPmt: number;
     public interestAmt: number;
     public payment: number;
     public addOnAmt;
@@ -94,6 +100,7 @@ export class LoanYear implements ILoanPeriod {
     constructor(number: number, loanMonth: LoanMonth) {
         this.number = number;
         this.date = loanMonth.date.toDate().toFirstOfTheMonthString();
+        this.totalPmt = loanMonth.totalPmt;
         this.interestAmt = loanMonth.interestAmt;
         this.payment = loanMonth.payment;
         this.addOnAmt = loanMonth.addOnAmt;

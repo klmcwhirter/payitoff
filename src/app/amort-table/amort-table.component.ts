@@ -9,7 +9,7 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class AmortTableComponent implements OnInit {
   @Input() dataSource: MatTableDataSource<ILoanPeriod>;
-  displayedColumns = ['number', 'date', 'payment', 'addOnAmt', 'interest', 'principal', 'balance'];
+  displayedColumns = ['number', 'date', 'totalPmt', 'payment', 'addOnAmt', 'interest', 'principal', 'balance'];
 
   constructor() { }
 

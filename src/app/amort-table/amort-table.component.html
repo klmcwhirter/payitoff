@@ -14,6 +14,12 @@
         <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.date}} </mat-cell>
       </ng-container>
   
+      <!-- Total Pmt Column -->
+      <ng-container matColumnDef="totalPmt">
+        <mat-header-cell *matHeaderCellDef> Total Pmt </mat-header-cell>
+        <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.totalPmt | currency:'USD':true:'1.2-2'}} </mat-cell>
+      </ng-container>
+  
       <!-- Payment Column -->
       <ng-container matColumnDef="payment">
         <mat-header-cell *matHeaderCellDef> Payment </mat-header-cell>
@@ -44,7 +50,7 @@
         <mat-cell *matCellDef="let loanPeriod"> {{loanPeriod.balance | currency:'USD':true:'1.2-2'}} </mat-cell>
       </ng-container>
   
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
   </div>
